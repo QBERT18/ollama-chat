@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/chat",
+      "destination": "https://laney-pinchable-kurtis.ngrok-free.dev/chat"
+    }
+  ]
+}
