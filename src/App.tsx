@@ -73,15 +73,15 @@ function App() {
   }
 
   return (
-    <div className="flex h-screen items-center justify-center p-4">
-      <Card className="flex h-[700px] w-full max-w-2xl flex-col">
-        <CardHeader className="border-b">
+    <div className="flex h-dvh w-full items-center justify-center p-0 sm:p-4">
+      <Card className="flex h-full w-full max-w-2xl flex-col rounded-none sm:h-175 sm:rounded-2xl">
+        <CardHeader className="border-b py-3 sm:py-6">
           <CardTitle className="text-lg">Ollama Chat</CardTitle>
         </CardHeader>
 
-        <CardContent className="flex-1 overflow-hidden p-0">
+        <CardContent className="min-h-0 flex-1 overflow-hidden p-0">
           <ScrollArea className="h-full">
-            <div className="flex flex-col gap-4 p-6">
+            <div className="flex flex-col gap-4 p-4 sm:p-6">
               {messages.length === 0 && (
                 <p className="text-center text-muted-foreground">
                   Send a message to start chatting.
@@ -129,7 +129,7 @@ function App() {
           </ScrollArea>
         </CardContent>
 
-        <CardFooter className="border-t pt-4">
+        <CardFooter className="border-t px-4 pt-3 pb-[env(safe-area-inset-bottom,0.75rem)] sm:px-6 sm:pt-4">
           <form onSubmit={handleSubmit} className="flex w-full gap-2">
             <Input
               value={input}
