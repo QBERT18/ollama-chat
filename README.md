@@ -1,73 +1,75 @@
-# React + TypeScript + Vite
+# Ollama Chat
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A responsive chat frontend built with React, TypeScript, Vite, and shadcn/ui that connects to a self-hosted LLM via [local-llm](https://github.com/QBERT18/local-llm).
 
-Currently, two official plugins are available:
+## Prerequisites
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- [Node.js](https://nodejs.org/) (v18+)
+- [local-llm](https://github.com/QBERT18/local-llm) running and accessible (see below)
 
-## React Compiler
+## Dependency: local-llm
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+This project **requires** the [QBERT18/local-llm](https://github.com/QBERT18/local-llm) backend to be running somewhere reachable by this frontend. The backend exposes a `/chat` endpoint that this app sends prompts to.
 
-## Expanding the ESLint configuration
+Since the LLM backend typically runs on a local machine (e.g. a Mac on your home network), you need to expose it via a tunnel like [ngrok](https://ngrok.com/) so that both local development and deployed versions (e.g. on Vercel) can reach it.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+**Example:**
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+# On the machine running local-llm
+ngrok http 8080
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+This gives you a public URL like `https://your-subdomain.ngrok-free.dev` that you'll use in the `.env` file below.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Getting Started
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/QBERT18/ollama-chat.git
+cd ollama-chat
 ```
+
+### 2. Install dependencies
+
+```bash
+npm install
+```
+
+### 3. Create the `.env` file
+
+Create a `.env` file in the project root:
+
+```env
+VITE_OLLAMA_HOST=https://your-subdomain.ngrok-free.dev
+VITE_CHAT_ENDPOINT=/chat
+```
+
+Replace the `VITE_OLLAMA_HOST` value with your actual ngrok URL (or the direct IP/port if running locally, e.g. `http://192.168.x.x:8080`).
+
+### 4. Start the dev server
+
+```bash
+npm run dev
+```
+
+The app will be available at `http://localhost:5173`. The Vite dev server proxies `/chat` requests to the host defined in your `.env`, so there are no CORS issues.
+
+### 5. Start chatting
+
+Open the app in your browser and send a message. Make sure your [local-llm](https://github.com/QBERT18/local-llm) backend and ngrok tunnel are running.
+
+## Deployment (Vercel)
+
+The project includes a `vercel.json` with rewrites that proxy `/chat` to the ngrok URL. Update the `destination` in `vercel.json` if your ngrok URL changes.
+
+Also set `VITE_CHAT_ENDPOINT=/chat` as an environment variable in your Vercel project settings.
+
+## Tech Stack
+
+- React 19
+- TypeScript
+- Vite
+- Tailwind CSS v4
+- shadcn/ui (base-ui)
