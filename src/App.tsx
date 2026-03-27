@@ -34,7 +34,7 @@ function App() {
     setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
 
     try {
-      const res = await fetch("/chat", {
+      const res = await fetch(import.meta.env.VITE_CHAT_ENDPOINT, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ prompt }),
